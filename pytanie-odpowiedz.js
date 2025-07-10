@@ -136,7 +136,7 @@ function onPageLoad()
             {
                 spans[m].parentNode.removeChild(spans[m]);            
             }
-            if (itemToCheck !== answers[i])
+            if (itemToCheck.replace(/[.!?]/g, "").trim() !== answers[i].replace(/[.!?]/g, "").trim())
             {            
                 myparagraph = document.createElement("span");
                 myparagraph.setAttribute("id", "answer"+i);
