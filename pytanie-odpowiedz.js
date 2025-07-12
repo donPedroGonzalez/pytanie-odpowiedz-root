@@ -118,15 +118,17 @@ function onPageLoad()
     }  
         // CHECKING ANSWERS
 
-    var answer, itemName, itemToCheck, formToCheck, myparagraph, resultWrapper;
+    var answerBad, itemAnswers, itemName, itemToCheck, formToCheck, myparagraph, resultWrapper;
+    var correctAnswer = "";
     var correctNumber = 0;
 
     document.getElementById("button").onclick = function()
     {
         for(var i = 1; i < questions.length; i++)
         {
+            correctAnswer = ""
             keyboardDeactivation();
-            answer = answers[i];
+            itemAnswers = answers[i].split("|");
             itemName = "item" + i;
             formToCheck = document.getElementById("myExercice");
             itemToCheck = formToCheck.elements[itemName].value;
@@ -136,13 +138,40 @@ function onPageLoad()
             {
                 spans[m].parentNode.removeChild(spans[m]);            
             }
-            if (itemToCheck.replace(/[.!?]/g, "").trim() !== answers[i].replace(/[.!?]/g, "").trim())
+
+            for (var k = 0; k < itemAnswers.length; k++)
+            {
+                console.log("itemToCheck JSON:", JSON.stringify(itemToCheck));
+                console.log("answer JSON:", JSON.stringify(itemAnswers[k]));
+                if (itemToCheck.replace(/[.!?]/g, "").trim() !== itemAnswers[k].replace(/[.!?]/g, "").trim())
+                {            
+                    answerBad = true;
+                    console.log("answer is bad")
+                }else
+                {
+                    answerBad = false;
+                    console.log("answer is good")
+                    break;
+                }
+            }
+
+            if (answerBad)
             {            
                 myparagraph = document.createElement("span");
                 myparagraph.setAttribute("id", "answer"+i);
                 myparagraph.setAttribute("style", "color:red;");
                 myparagraph.setAttribute("class", "check-answer");
-                myparagraph.innerText = " - La réponse correcte : " + answers[i];
+                for (var j = 0; j < itemAnswers.length; j++)
+                {
+                    if (j > 0){
+                        correctAnswer = correctAnswer + " or ";
+                    }
+                    correctAnswer = correctAnswer + "« " + itemAnswers[j] + " »";
+                }
+                console.log("correctAnswer ")
+                console.log(correctAnswer)
+
+                myparagraph.innerText = " - La réponse correcte : " + correctAnswer;
                 document.getElementById("par"+i).appendChild(myparagraph);
             }else
             {
